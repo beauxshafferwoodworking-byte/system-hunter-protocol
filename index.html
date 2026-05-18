@@ -26,7 +26,7 @@
           <div class="level-row"><h2>LV. <span id="level">1</span></h2><p><span id="xp">0</span>/<span id="nextXp">250</span> XP</p></div>
           <div class="xp-bar"><div id="xpFill"></div></div>
           <div class="quick-stats"><div><strong id="streak">0</strong><span>Streak</span></div><div><strong id="fatigueStatus">Stable</strong><span>Fatigue</span></div><div><strong id="painStatus">Check</strong><span>Pain</span></div></div>
-          <p class="version">SYSTEM v2.9 // History Archive</p>
+          <p class="version">SYSTEM v3.1 // Weekly Recap</p>
         </section>
 
         <section class="panel status-card" id="playerCard">
@@ -52,6 +52,7 @@
       <section class="view" data-view="archive">
         <section class="panel"><div class="section-head"><h3>Hunter Archive</h3><span class="badge">How-To</span></div><p class="muted-copy">Open exercise instructions, movement cues, warnings, and references.</p><div id="codexList" class="codex-list"></div></section>
         <section class="panel"><h3>Unlocked Titles</h3><div id="achievementList" class="achievement-list"></div></section>
+        <section class="panel weekly-recap-card"><div class="section-head"><h3>Weekly Recap</h3><span id="weeklyRank" class="badge">Analyzing</span></div><div class="weekly-grid"><div><strong id="weeklyClears">0</strong><span>Clears</span></div><div><strong id="weeklyFullClears">0</strong><span>Full</span></div><div><strong id="weeklyGates">0</strong><span>Gates</span></div><div><strong id="weeklyStreak">0</strong><span>Streak</span></div></div><p id="weeklySummary" class="muted-copy">Complete Daily Quests to generate a weekly hunter report.</p></section>
         <section class="panel"><div class="section-head"><h3>History Log</h3><span id="historyCount" class="badge">0 Entries</span></div><p class="muted-copy">Recent completed Daily Quests and Gates. This will become the weekly recap system later.</p><div id="historyList" class="history-list"></div></section>
       </section>
 
@@ -61,6 +62,6 @@
     <nav class="bottom-nav"><button class="active" data-tab="status">Status</button><button data-tab="quest">Quest</button><button data-tab="archive">Archive</button><button data-tab="data">Data</button></nav>
   </div>
 
-  <script src="save.js"></script><script src="gates.js"></script><script src="daily.js"></script><script src="app.js"></script><script src="stats.js"></script><script src="history.js"></script><script src="tabs.js"></script>
+  <script src="save.js"></script><script src="gates.js"></script><script src="daily.js"></script><script src="app.js"></script><script src="stats.js"></script><script src="history.js"></script><script src="recap.js"></script><script src="tabs.js"></script>
 </body>
 </html>
