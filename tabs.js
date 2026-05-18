@@ -6,6 +6,8 @@ const PAGE_TITLES = {
 };
 
 function switchTab(tabName){
+  if(!tabName) return;
+
   document.querySelectorAll('.view').forEach(view => {
     view.classList.toggle('active', view.dataset.view === tabName);
   });
@@ -24,7 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.bottom-nav button[data-tab]').forEach(button => {
     button.addEventListener('click', event => {
       event.preventDefault();
+      event.stopImmediatePropagation();
       switchTab(button.dataset.tab);
-    });
+    }, true);
   });
 });
