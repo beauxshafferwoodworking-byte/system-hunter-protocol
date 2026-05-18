@@ -45,6 +45,16 @@ function ensureDailyState(save){
   return save.daily;
 }
 
+function getSavedResetText(save = readDailySave()){
+  if(!save) return formatResetCountdown(null);
+  const daily = ensureDailyState(save);
+  if(!daily.resetAt || Number.isNaN(new Date(daily.resetAt).getTime()) || new Date(daily.resetAt) <= new Date()){
+    daily.resetAt = getNextLocalMidnightIso();
+    writeDailySave(save);
+  }
+  return formatResetCountdown(daily.resetAt);
+}
+
 function ensureHistory(save){
   if(!Array.isArray(save.history)) save.history = [];
   return save.history;
@@ -137,7 +147,7 @@ function reconcileExistingQuest(){
     writeDailySave(save);
     return;
   }
-  if(!daily.resetAt || new Date(daily.resetAt) <= new Date()){
+  if(!daily.resetAt || Number.isNaN(new Date(daily.resetAt).getTime()) || new Date(daily.resetAt) <= new Date()){
     daily.resetAt = getNextLocalMidnightIso();
     writeDailySave(save);
   }
@@ -238,7 +248,7 @@ function updateDailyUi(){
 document.addEventListener('DOMContentLoaded', () => {
   reconcileExistingQuest();
   updateDailyUi();
-  setInterval(updateDailyUi, 60000);
+  setInterval(updateDailyUi, 30000);
 
   const generateButton = document.getElementById('generateQuest');
   if(generateButton){
