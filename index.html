@@ -33,10 +33,7 @@
 
   <div class="app-shell">
     <header class="system-header">
-      <div>
-        <p class="eyebrow">SYSTEM ONLINE</p>
-        <h1 id="pageTitle">Hunter Protocol</h1>
-      </div>
+      <div><p class="eyebrow">SYSTEM ONLINE</p><h1 id="pageTitle">Hunter Protocol</h1></div>
       <button id="installBtn" class="ghost hidden">Install</button>
     </header>
 
@@ -47,7 +44,28 @@
           <div class="level-row"><h2>LV. <span id="level">1</span></h2><p><span id="xp">0</span>/<span id="nextXp">250</span> XP</p></div>
           <div class="xp-bar"><div id="xpFill"></div></div>
           <div class="quick-stats"><div><strong id="streak">0</strong><span>Streak</span></div><div><strong id="fatigueStatus">Stable</strong><span>Fatigue</span></div><div><strong id="painStatus">Check</strong><span>Pain</span></div></div>
-          <p class="version">SYSTEM v1.9 // Stable Save Protocol</p>
+          <p class="version">SYSTEM v2.0 // Player Status</p>
+        </section>
+
+        <section class="panel status-card" id="playerCard">
+          <p class="eyebrow">PLAYER STATUS</p>
+          <div class="status-card-head"><div><h2>Hunter Profile</h2><p id="statusTitle">E-RANK // Exhausted Survivor</p></div><div class="status-level">LV.<span id="statusLevel">1</span></div></div>
+          <div class="status-grid">
+            <div><strong id="statusFullQuests">0</strong><span>Full Quests</span></div>
+            <div><strong id="statusPartialQuests">0</strong><span>Partial Quests</span></div>
+            <div><strong id="statusLongestStreak">0</strong><span>Best Streak</span></div>
+            <div><strong id="statusAchievements">0</strong><span>Titles</span></div>
+          </div>
+          <div class="status-divider"></div>
+          <div class="lifetime-grid">
+            <div><span>Pushups</span><strong id="totalPushups">0</strong></div>
+            <div><span>Squats</span><strong id="totalSquats">0</strong></div>
+            <div><span>Lunges</span><strong id="totalLunges">0</strong></div>
+            <div><span>Core Sets</span><strong id="totalCore">0</strong></div>
+            <div><span>Mobility</span><strong id="totalMobility">0</strong></div>
+            <div><span>Walk/Run Min</span><strong id="totalCardioMinutes">0</strong></div>
+          </div>
+          <p class="muted-copy">Screenshot this card as your current Hunter status. Share/export options will come later.</p>
         </section>
 
         <section class="panel"><h3>Hunter Stats</h3><div class="stats"><div><span>Strength</span><b id="str">1</b></div><div><span>Endurance</span><b id="end">1</b></div><div><span>Agility</span><b id="agi">1</b></div><div><span>Vitality</span><b id="vit">1</b></div><div><span>Recovery</span><b id="rec">1</b></div></div></section>
