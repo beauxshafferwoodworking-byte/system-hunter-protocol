@@ -31,6 +31,10 @@ function ensureLifetimeStats(save){
       lastUpdated: null
     };
   }
+  const defaults = { pushups:0, squats:0, lunges:0, coreSets:0, mobilitySessions:0, cardioMinutes:0, recoverySessions:0, pullups:0 };
+  Object.keys(defaults).forEach(key => {
+    if(typeof save.lifetimeStats[key] === 'undefined') save.lifetimeStats[key] = defaults[key];
+  });
   if(typeof save.lifetimeStats.longestStreak === 'undefined') save.lifetimeStats.longestStreak = save.streak || 0;
   return save.lifetimeStats;
 }
@@ -59,6 +63,19 @@ function addVolume(target, volume){
   });
 }
 
+function getHunterClassification(stats){
+  const strengthScore = (stats.pushups || 0) + (stats.squats || 0) + (stats.lunges || 0) + ((stats.pullups || 0) * 3);
+  const enduranceScore = (stats.cardioMinutes || 0) * 5;
+  const recoveryScore = ((stats.mobilitySessions || 0) + (stats.recoverySessions || 0)) * 60 + ((stats.coreSets || 0) * 8);
+
+  const top = Math.max(strengthScore, enduranceScore, recoveryScore);
+  if(top < 150) return 'Classification: Unawakened';
+  if(strengthScore === top && enduranceScore > top * 0.65) return 'Classification: Hybrid Hunter';
+  if(strengthScore === top) return 'Classification: Vanguard';
+  if(enduranceScore === top) return 'Classification: Endurance Hunter';
+  return 'Classification: Recovery Adept';
+}
+
 function processCompletedQuestStats(before, after){
   if(!before || !after) return;
   const beforeFull = before.fullCompletions || 0;
@@ -72,6 +89,8 @@ function processCompletedQuestStats(before, after){
   const completedQuests = (before.quests || []).filter(q => q.done);
   completedQuests.forEach(quest => addVolume(stats, estimateQuestVolume(quest)));
   stats.longestStreak = Math.max(stats.longestStreak || 0, after.streak || 0);
+  stats.estimatedMiles = Number(((stats.cardioMinutes || 0) / 18).toFixed(1));
+  stats.classification = getHunterClassification(stats);
   stats.lastUpdated = new Date().toISOString();
   writeStatsSave(after);
   renderStatusCard(after);
@@ -80,10 +99,14 @@ function processCompletedQuestStats(before, after){
 function renderStatusCard(save = readStatsSave()){
   if(!save) return;
   const stats = ensureLifetimeStats(save);
-  const setText = (id, value) => { const el = document.getElementById(id); if(el) el.textContent = value; };
+  stats.estimatedMiles = Number(((stats.cardioMinutes || 0) / 18).toFixed(1));
+  stats.classification = getHunterClassification(stats);
 
+  const setText = (id, value) => { const el = document.getElementById(id); if(el) el.textContent = value; };
   const rank = save.level >= 14 ? 'C-RANK' : save.level >= 7 ? 'D-RANK' : 'E-RANK';
+
   setText('statusTitle', `${rank} // ${save.title || 'Exhausted Survivor'}`);
+  setText('statusClass', stats.classification);
   setText('statusLevel', save.level || 1);
   setText('statusFullQuests', save.fullCompletions || 0);
   setText('statusPartialQuests', save.partialCompletions || 0);
@@ -92,9 +115,12 @@ function renderStatusCard(save = readStatsSave()){
   setText('totalPushups', stats.pushups || 0);
   setText('totalSquats', stats.squats || 0);
   setText('totalLunges', stats.lunges || 0);
+  setText('totalPullups', stats.pullups || 0);
   setText('totalCore', stats.coreSets || 0);
   setText('totalMobility', stats.mobilitySessions || 0);
+  setText('totalRecovery', stats.recoverySessions || 0);
   setText('totalCardioMinutes', stats.cardioMinutes || 0);
+  setText('totalMiles', stats.estimatedMiles.toFixed(1));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
