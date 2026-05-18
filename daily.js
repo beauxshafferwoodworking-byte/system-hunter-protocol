@@ -35,16 +35,7 @@ function writeDailySave(save){
 
 function ensureDailyState(save){
   if(!save.daily){
-    save.daily = {
-      activeDate: null,
-      completedDate: null,
-      generatedAt: null,
-      resetAt: null,
-      activeGate: null,
-      gateCompletedDate: null,
-      gateRollDate: null,
-      totalGatesCleared: 0
-    };
+    save.daily = { activeDate:null, completedDate:null, completedAt:null, generatedAt:null, resetAt:null, activeGate:null, gateCompletedDate:null, gateRollDate:null, totalGatesCleared:0 };
   }
   if(typeof save.daily.totalGatesCleared === 'undefined') save.daily.totalGatesCleared = 0;
   return save.daily;
@@ -69,12 +60,28 @@ function isDailyQuestLocked(save){
   return daily.activeDate === today && Array.isArray(save.quests) && save.quests.length > 0;
 }
 
+function isDailyCompletionLocked(save){
+  if(!save) return false;
+  const daily = ensureDailyState(save);
+  return daily.completedDate === getLocalDateKey();
+}
+
 function markDailyGenerated(save){
   const today = getLocalDateKey();
   const daily = ensureDailyState(save);
   daily.activeDate = today;
   daily.generatedAt = daily.generatedAt || new Date().toISOString();
   daily.resetAt = new Date(new Date().setHours(24, 0, 0, 0)).toISOString();
+  return save;
+}
+
+function markDailyCompleted(save){
+  const daily = ensureDailyState(save);
+  daily.completedDate = getLocalDateKey();
+  daily.completedAt = new Date().toISOString();
+  save.quests = (save.quests || []).map(q => ({ ...q, locked:true }));
+  save.log = save.log || [];
+  save.log.unshift(`${new Date().toLocaleString()}: Daily Quest completion locked until reset.`);
   return save;
 }
 
@@ -96,14 +103,12 @@ function applyGateIfRolled(save){
   const daily = ensureDailyState(save);
   const today = getLocalDateKey();
   if(daily.gateRollDate === today) return save;
-
   daily.gateRollDate = today;
   const gate = window.SYSTEM_GATES.rollForGate();
   if(!gate){ daily.activeGate = null; return save; }
-
   save.quests = gate.modifier(save.quests || []);
   save.dayType = gate.name;
-  daily.activeGate = { id: gate.id, name: gate.name, type: gate.type, bonusXp: gate.bonusXp, generatedAt: new Date().toISOString(), cleared: false };
+  daily.activeGate = { id: gate.id, name: gate.name, type: gate.type, bonusXp: gate.bonusXp, generatedAt: new Date().toISOString(), cleared:false };
   save.log = save.log || [];
   save.log.unshift(`${new Date().toLocaleString()}: ${gate.name} detected. Bonus XP available: +${gate.bonusXp}.`);
   showDailyNotice(gate.overlay, gate.description, 'GATE EVENT');
@@ -119,19 +124,27 @@ function processDailyGeneration(){
   window.location.reload();
 }
 
+function processDailyCompletion(before, after){
+  if(!before || !after) return;
+  const beforeFull = before.fullCompletions || 0;
+  const beforePartial = before.partialCompletions || 0;
+  const afterFull = after.fullCompletions || 0;
+  const afterPartial = after.partialCompletions || 0;
+  if(afterFull <= beforeFull && afterPartial <= beforePartial) return;
+  markDailyCompleted(after);
+  writeDailySave(after);
+}
+
 function processGateCompletion(before, after){
   if(!before || !after) return;
   const beforeFull = before.fullCompletions || 0;
   const afterFull = after.fullCompletions || 0;
   if(afterFull <= beforeFull) return;
-
   const daily = ensureDailyState(after);
   const gate = daily.activeGate;
   if(!gate || gate.cleared) return;
-
   const gateQuestCleared = (before.quests || []).some(q => q.gate && q.done);
   if(!gateQuestCleared) return;
-
   after.xp = (after.xp || 0) + (gate.bonusXp || 0);
   gate.cleared = true;
   gate.clearedAt = new Date().toISOString();
@@ -146,12 +159,29 @@ function processGateCompletion(before, after){
 
 function updateDailyUi(){
   const save = readDailySave();
-  const button = document.getElementById('generateQuest');
-  if(!button) return;
+  const generateButton = document.getElementById('generateQuest');
+  const completeButton = document.getElementById('completeDay');
   const daily = save ? ensureDailyState(save) : null;
   const today = getLocalDateKey();
   const locked = save && daily.activeDate === today && Array.isArray(save.quests) && save.quests.length > 0;
-  button.textContent = locked ? `Daily Quest Locked // Reset in ${getNextResetText()}` : 'Generate Today’s Quest';
+  const completeLocked = save && daily.completedDate === today;
+
+  if(generateButton) generateButton.textContent = locked ? `Daily Quest Locked // Reset in ${getNextResetText()}` : 'Generate Today’s Quest';
+  if(completeButton){
+    completeButton.textContent = completeLocked ? `Daily Quest Complete // Reset in ${getNextResetText()}` : 'Complete Daily Quest';
+    completeButton.disabled = !!completeLocked;
+  }
+
+  const badge = document.getElementById('dailyLockBadge');
+  const reset = document.getElementById('dailyResetTimer');
+  const gateStatus = document.getElementById('dailyGateStatus');
+  const gateClears = document.getElementById('dailyGateClears');
+  const hint = document.getElementById('dailySystemHint');
+  if(badge) badge.textContent = completeLocked ? 'Complete' : locked ? 'Active' : 'Available';
+  if(reset) reset.textContent = getNextResetText();
+  if(gateStatus) gateStatus.textContent = daily?.activeGate ? (daily.activeGate.cleared ? `${daily.activeGate.name} Cleared` : daily.activeGate.name) : 'No Gate';
+  if(gateClears) gateClears.textContent = daily?.totalGatesCleared || 0;
+  if(hint) hint.textContent = completeLocked ? 'Daily rewards claimed. New quest available after reset.' : 'Daily quests and Gates are locked to your local calendar day.';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -174,7 +204,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const completeButton = document.getElementById('completeDay');
   if(completeButton){
-    completeButton.addEventListener('click', () => { preCompleteDailySnapshot = readDailySave(); }, true);
-    completeButton.addEventListener('click', () => setTimeout(() => processGateCompletion(preCompleteDailySnapshot, readDailySave()), 160));
+    completeButton.addEventListener('click', event => {
+      const save = readDailySave();
+      if(isDailyCompletionLocked(save)){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        showDailyNotice('DAILY REWARD ALREADY CLAIMED', `Next completion available in ${getNextResetText()}.`, 'SYSTEM LOCK');
+        return;
+      }
+      preCompleteDailySnapshot = save;
+    }, true);
+    completeButton.addEventListener('click', () => {
+      setTimeout(() => {
+        const latest = readDailySave();
+        processDailyCompletion(preCompleteDailySnapshot, latest);
+        processGateCompletion(preCompleteDailySnapshot, readDailySave());
+        updateDailyUi();
+      }, 180);
+    });
   }
 });
