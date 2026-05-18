@@ -42,38 +42,20 @@
 
     <main>
       <section class="panel hero-panel" data-section="status">
-        <div class="rank-block">
-          <span id="rank">E-RANK</span>
-          <small id="title">Exhausted Survivor</small>
-        </div>
-        <div class="level-row">
-          <h2>LV. <span id="level">1</span></h2>
-          <p><span id="xp">0</span>/<span id="nextXp">250</span> XP</p>
-        </div>
+        <div class="rank-block"><span id="rank">E-RANK</span><small id="title">Exhausted Survivor</small></div>
+        <div class="level-row"><h2>LV. <span id="level">1</span></h2><p><span id="xp">0</span>/<span id="nextXp">250</span> XP</p></div>
         <div class="xp-bar"><div id="xpFill"></div></div>
-        <div class="quick-stats">
-          <div><strong id="streak">0</strong><span>Streak</span></div>
-          <div><strong id="fatigueStatus">Stable</strong><span>Fatigue</span></div>
-          <div><strong id="painStatus">Check</strong><span>Pain</span></div>
-        </div>
-        <p class="version">SYSTEM v1.2 // Codex Awakening</p>
+        <div class="quick-stats"><div><strong id="streak">0</strong><span>Streak</span></div><div><strong id="fatigueStatus">Stable</strong><span>Fatigue</span></div><div><strong id="painStatus">Check</strong><span>Pain</span></div></div>
+        <p class="version">SYSTEM v1.7 // Stable Save Protocol</p>
       </section>
 
       <section class="panel" data-section="check">
         <h3>Daily Status Check</h3>
         <div class="grid-2">
-          <label>Fatigue
-            <select id="fatigue"><option value="1">1 - Fresh</option><option value="2">2 - Good</option><option value="3" selected>3 - Normal</option><option value="4">4 - Drained</option><option value="5">5 - Cooked</option></select>
-          </label>
-          <label>Sleep Quality
-            <select id="sleep"><option value="1">1 - Bad</option><option value="2">2 - Rough</option><option value="3" selected>3 - OK</option><option value="4">4 - Good</option><option value="5">5 - Great</option></select>
-          </label>
-          <label>Lower Back Pain
-            <select id="backPain"><option value="0">0 - None</option><option value="1">1 - Mild</option><option value="2" selected>2 - Noticeable</option><option value="3">3 - Bad</option><option value="4">4 - Severe</option></select>
-          </label>
-          <label>Neck Pain
-            <select id="neckPain"><option value="0">0 - None</option><option value="1">1 - Mild</option><option value="2" selected>2 - Noticeable</option><option value="3">3 - Bad</option><option value="4">4 - Severe</option></select>
-          </label>
+          <label>Fatigue<select id="fatigue"><option value="1">1 - Fresh</option><option value="2">2 - Good</option><option value="3" selected>3 - Normal</option><option value="4">4 - Drained</option><option value="5">5 - Cooked</option></select></label>
+          <label>Sleep Quality<select id="sleep"><option value="1">1 - Bad</option><option value="2">2 - Rough</option><option value="3" selected>3 - OK</option><option value="4">4 - Good</option><option value="5">5 - Great</option></select></label>
+          <label>Lower Back Pain<select id="backPain"><option value="0">0 - None</option><option value="1">1 - Mild</option><option value="2" selected>2 - Noticeable</option><option value="3">3 - Bad</option><option value="4">4 - Severe</option></select></label>
+          <label>Neck Pain<select id="neckPain"><option value="0">0 - None</option><option value="1">1 - Mild</option><option value="2" selected>2 - Noticeable</option><option value="3">3 - Bad</option><option value="4">4 - Severe</option></select></label>
         </div>
         <button id="generateQuest">Generate Today’s Quest</button>
       </section>
@@ -86,31 +68,25 @@
         <button id="missDay" class="danger">Mark Missed / Activate Penalty</button>
       </section>
 
-      <section class="panel" data-section="stats">
-        <h3>Hunter Stats</h3>
-        <div class="stats">
-          <div><span>Strength</span><b id="str">1</b></div><div><span>Endurance</span><b id="end">1</b></div><div><span>Agility</span><b id="agi">1</b></div><div><span>Vitality</span><b id="vit">1</b></div><div><span>Recovery</span><b id="rec">1</b></div>
-        </div>
-      </section>
+      <section class="panel" data-section="stats"><h3>Hunter Stats</h3><div class="stats"><div><span>Strength</span><b id="str">1</b></div><div><span>Endurance</span><b id="end">1</b></div><div><span>Agility</span><b id="agi">1</b></div><div><span>Vitality</span><b id="vit">1</b></div><div><span>Recovery</span><b id="rec">1</b></div></div></section>
 
-      <section class="panel" data-section="codex">
-        <div class="section-head"><h3>Hunter Archive</h3><span class="badge">How-To</span></div>
-        <p class="muted-copy">Tap any “How-To” button inside a quest to open movement cues, steps, warnings, and progression notes.</p>
-        <div id="codexList" class="codex-list"></div>
-      </section>
+      <section class="panel" data-section="codex"><div class="section-head"><h3>Hunter Archive</h3><span class="badge">How-To</span></div><p class="muted-copy">Tap any “How-To” button inside a quest to open movement cues, steps, warnings, and progression notes.</p><div id="codexList" class="codex-list"></div></section>
 
-      <section class="panel" data-section="achievements">
-        <h3>Unlocked Titles</h3>
-        <div id="achievementList" class="achievement-list"></div>
+      <section class="panel" data-section="achievements"><h3>Unlocked Titles</h3><div id="achievementList" class="achievement-list"></div></section>
+
+      <section class="panel" data-section="data">
+        <div class="section-head"><h3>Player Data</h3><span class="badge">Backup</span></div>
+        <p class="muted-copy">Your save now uses a permanent player profile key. Use export/import as a manual backup, or wipe when you want a clean finished-app start.</p>
+        <button id="exportSave" class="primary">Export Player Save</button>
+        <label class="file-import">Import Player Save<input id="importSave" type="file" accept="application/json,.json"></label>
+        <button id="wipeSave" class="danger">Wipe Player Data</button>
       </section>
 
       <section class="panel"><h3>Penalty Zone</h3><p id="penaltyText">No penalty active. Maintain your streak, Hunter.</p></section>
       <section class="panel"><h3>System Log</h3><div id="log" class="log"></div></section>
     </main>
 
-    <nav class="bottom-nav">
-      <button class="active" data-scroll="status">Status</button><button data-scroll="check">Check</button><button data-scroll="quest">Quest</button><button data-scroll="codex">Codex</button>
-    </nav>
+    <nav class="bottom-nav"><button class="active" data-scroll="status">Status</button><button data-scroll="check">Check</button><button data-scroll="quest">Quest</button><button data-scroll="data">Data</button></nav>
   </div>
 
   <script src="app.js"></script>
