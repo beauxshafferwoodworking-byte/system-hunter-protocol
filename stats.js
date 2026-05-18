@@ -76,6 +76,16 @@ function getHunterClassification(stats){
   return 'Classification: Recovery Adept';
 }
 
+function getGateStats(save){
+  const daily = save.daily || {};
+  const history = Array.isArray(save.history) ? save.history : [];
+  const clearedGateHistory = history.filter(entry => entry.gate && entry.gate.cleared);
+  const totalCleared = daily.totalGatesCleared || clearedGateHistory.length || 0;
+  const lastGate = daily.lastGateCleared || clearedGateHistory[0]?.gate?.name || 'None';
+  const gateXp = daily.totalGateXp || clearedGateHistory.reduce((sum, entry) => sum + (entry.gate?.bonusXp || 0), 0);
+  return { totalCleared, lastGate, gateXp };
+}
+
 function processCompletedQuestStats(before, after){
   if(!before || !after) return;
   const beforeFull = before.fullCompletions || 0;
@@ -99,6 +109,7 @@ function processCompletedQuestStats(before, after){
 function renderStatusCard(save = readStatsSave()){
   if(!save) return;
   const stats = ensureLifetimeStats(save);
+  const gates = getGateStats(save);
   stats.estimatedMiles = Number(((stats.cardioMinutes || 0) / 18).toFixed(1));
   stats.classification = getHunterClassification(stats);
 
@@ -121,6 +132,9 @@ function renderStatusCard(save = readStatsSave()){
   setText('totalRecovery', stats.recoverySessions || 0);
   setText('totalCardioMinutes', stats.cardioMinutes || 0);
   setText('totalMiles', stats.estimatedMiles.toFixed(1));
+  setText('statusGatesCleared', gates.totalCleared);
+  setText('statusLastGate', gates.lastGate);
+  setText('statusGateXp', gates.gateXp);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
