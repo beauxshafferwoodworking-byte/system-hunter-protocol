@@ -45,14 +45,39 @@ function ensureDailyState(save){
   return save.daily;
 }
 
-function getSavedResetText(save = readDailySave()){
-  if(!save) return formatResetCountdown(null);
-  const daily = ensureDailyState(save);
-  if(!daily.resetAt || new Date(daily.resetAt) <= new Date()){
-    daily.resetAt = getNextLocalMidnightIso();
-    writeDailySave(save);
-  }
-  return formatResetCountdown(daily.resetAt);
+function ensureHistory(save){
+  if(!Array.isArray(save.history)) save.history = [];
+  return save.history;
+}
+
+function appendDailyHistory(before, after){
+  if(!before || !after) return;
+  const history = ensureHistory(after);
+  const daily = ensureDailyState(after);
+  const dateKey = getLocalDateKey();
+  if(history.some(entry => entry.date === dateKey && entry.type === 'daily')) return;
+
+  const beforeQuests = before.quests || [];
+  const completedObjectives = beforeQuests.filter(q => q.done).map(q => q.name);
+  const totalObjectives = beforeQuests.length;
+  const isFull = completedObjectives.length === totalObjectives && totalObjectives > 0;
+  const gate = daily.activeGate || null;
+
+  history.unshift({
+    type: 'daily',
+    date: dateKey,
+    completedAt: daily.completedAt || new Date().toISOString(),
+    dayType: after.dayType || before.dayType || 'Daily Quest',
+    result: isFull ? 'full' : 'partial',
+    completedObjectives,
+    objectiveCount: completedObjectives.length,
+    totalObjectives,
+    gate: gate ? { id: gate.id, name: gate.name, type: gate.type, cleared: !!gate.cleared, bonusXp: gate.bonusXp || 0 } : null,
+    level: after.level || 1,
+    xp: after.xp || 0,
+    streak: after.streak || 0
+  });
+  after.history = history.slice(0, 90);
 }
 
 function showDailyNotice(title, body, eyebrow = 'DAILY SYSTEM'){
@@ -152,6 +177,7 @@ function processDailyCompletion(before, after){
   const afterPartial = after.partialCompletions || 0;
   if(afterFull <= beforeFull && afterPartial <= beforePartial) return;
   markDailyCompleted(after);
+  appendDailyHistory(before, after);
   writeDailySave(after);
 }
 
@@ -170,9 +196,12 @@ function processGateCompletion(before, after){
   gate.clearedAt = new Date().toISOString();
   daily.gateCompletedDate = getLocalDateKey();
   daily.totalGatesCleared = (daily.totalGatesCleared || 0) + 1;
+  daily.totalGateXp = (daily.totalGateXp || 0) + (gate.bonusXp || 0);
+  daily.lastGateCleared = gate.name;
   daily.resetAt = daily.resetAt && new Date(daily.resetAt) > new Date() ? daily.resetAt : getNextLocalMidnightIso();
   after.log = after.log || [];
   after.log.unshift(`${new Date().toLocaleString()}: Gate cleared: ${gate.name}. Bonus awarded: +${gate.bonusXp} XP.`);
+  appendDailyHistory(before, after);
   writeDailySave(after);
   showDailyNotice('GATE CLEARED', `${gate.name} conquered. Bonus awarded: +${gate.bonusXp} XP.`, 'GATE COMPLETE');
   setTimeout(() => window.location.reload(), 650);
