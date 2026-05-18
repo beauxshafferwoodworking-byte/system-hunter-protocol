@@ -13,13 +13,8 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="systemOverlay" class="system-overlay hidden">
-    <div class="system-modal"><p id="overlayEyebrow" class="eyebrow">SYSTEM ALERT</p><h2 id="overlayTitle">Quest Updated</h2><p id="overlayBody">New orders have been generated.</p><button id="overlayClose" class="ghost">Acknowledge</button></div>
-  </div>
-
-  <div id="codexOverlay" class="system-overlay hidden">
-    <div class="system-modal codex-modal"><p class="eyebrow">HUNTER ARCHIVE</p><h2 id="codexTitle">Exercise Codex</h2><div id="codexBody" class="codex-body"></div><button id="codexClose" class="ghost">Close Archive</button></div>
-  </div>
+  <div id="systemOverlay" class="system-overlay hidden"><div class="system-modal"><p id="overlayEyebrow" class="eyebrow">SYSTEM ALERT</p><h2 id="overlayTitle">Quest Updated</h2><p id="overlayBody">New orders have been generated.</p><button id="overlayClose" class="ghost">Acknowledge</button></div></div>
+  <div id="codexOverlay" class="system-overlay hidden"><div class="system-modal codex-modal"><p class="eyebrow">HUNTER ARCHIVE</p><h2 id="codexTitle">Exercise Codex</h2><div id="codexBody" class="codex-body"></div><button id="codexClose" class="ghost">Close Archive</button></div></div>
 
   <div class="app-shell">
     <header class="system-header"><div><p class="eyebrow">SYSTEM ONLINE</p><h1 id="pageTitle">Hunter Protocol</h1></div><button id="installBtn" class="ghost hidden">Install</button></header>
@@ -31,19 +26,15 @@
           <div class="level-row"><h2>LV. <span id="level">1</span></h2><p><span id="xp">0</span>/<span id="nextXp">250</span> XP</p></div>
           <div class="xp-bar"><div id="xpFill"></div></div>
           <div class="quick-stats"><div><strong id="streak">0</strong><span>Streak</span></div><div><strong id="fatigueStatus">Stable</strong><span>Fatigue</span></div><div><strong id="painStatus">Check</strong><span>Pain</span></div></div>
-          <p class="version">SYSTEM v2.7 // Gate Tracking</p>
+          <p class="version">SYSTEM v2.9 // History Archive</p>
         </section>
 
         <section class="panel status-card" id="playerCard">
           <p class="eyebrow">PLAYER STATUS</p>
           <div class="status-card-head"><div><h2>Hunter Profile</h2><p id="statusTitle">E-RANK // Exhausted Survivor</p><p id="statusClass" class="status-class">Classification: Unawakened</p></div><div class="status-level">LV.<span id="statusLevel">1</span></div></div>
-          <div class="status-grid">
-            <div><strong id="statusFullQuests">0</strong><span>Full Quests</span></div><div><strong id="statusPartialQuests">0</strong><span>Partial Quests</span></div><div><strong id="statusLongestStreak">0</strong><span>Best Streak</span></div><div><strong id="statusAchievements">0</strong><span>Titles</span></div>
-          </div>
+          <div class="status-grid"><div><strong id="statusFullQuests">0</strong><span>Full Quests</span></div><div><strong id="statusPartialQuests">0</strong><span>Partial Quests</span></div><div><strong id="statusLongestStreak">0</strong><span>Best Streak</span></div><div><strong id="statusAchievements">0</strong><span>Titles</span></div></div>
           <div class="status-divider"></div>
-          <div class="lifetime-grid">
-            <div><span>Pushups</span><strong id="totalPushups">0</strong></div><div><span>Squats</span><strong id="totalSquats">0</strong></div><div><span>Lunges</span><strong id="totalLunges">0</strong></div><div><span>Pullups</span><strong id="totalPullups">0</strong></div><div><span>Core Sets</span><strong id="totalCore">0</strong></div><div><span>Mobility</span><strong id="totalMobility">0</strong></div><div><span>Recovery</span><strong id="totalRecovery">0</strong></div><div><span>Walk/Run Min</span><strong id="totalCardioMinutes">0</strong></div><div><span>Est. Miles</span><strong id="totalMiles">0.0</strong></div><div><span>Gates Cleared</span><strong id="statusGatesCleared">0</strong></div><div><span>Last Gate</span><strong id="statusLastGate">None</strong></div><div><span>Gate XP</span><strong id="statusGateXp">0</strong></div>
-          </div>
+          <div class="lifetime-grid"><div><span>Pushups</span><strong id="totalPushups">0</strong></div><div><span>Squats</span><strong id="totalSquats">0</strong></div><div><span>Lunges</span><strong id="totalLunges">0</strong></div><div><span>Pullups</span><strong id="totalPullups">0</strong></div><div><span>Core Sets</span><strong id="totalCore">0</strong></div><div><span>Mobility</span><strong id="totalMobility">0</strong></div><div><span>Recovery</span><strong id="totalRecovery">0</strong></div><div><span>Walk/Run Min</span><strong id="totalCardioMinutes">0</strong></div><div><span>Est. Miles</span><strong id="totalMiles">0.0</strong></div><div><span>Gates Cleared</span><strong id="statusGatesCleared">0</strong></div><div><span>Last Gate</span><strong id="statusLastGate">None</strong></div><div><span>Gate XP</span><strong id="statusGateXp">0</strong></div></div>
           <p class="muted-copy">Screenshot this card as your current Hunter status. Share/export options will come later.</p>
         </section>
 
@@ -52,27 +43,24 @@
       </section>
 
       <section class="view" data-view="quest">
-        <section class="panel daily-system-card">
-          <div class="section-head"><h3>Daily System</h3><span id="dailyLockBadge" class="badge">Checking</span></div>
-          <div class="daily-system-grid">
-            <div><strong id="dailyResetTimer">--</strong><span>Next Reset</span></div>
-            <div><strong id="dailyGateStatus">No Gate</strong><span>Gate Status</span></div>
-            <div><strong id="dailyGateClears">0</strong><span>Gates Cleared</span></div>
-          </div>
-          <p id="dailySystemHint" class="muted-copy">Daily quests and Gates are locked to your local calendar day.</p>
-        </section>
+        <section class="panel daily-system-card"><div class="section-head"><h3>Daily System</h3><span id="dailyLockBadge" class="badge">Checking</span></div><div class="daily-system-grid"><div><strong id="dailyResetTimer">--</strong><span>Next Reset</span></div><div><strong id="dailyGateStatus">No Gate</strong><span>Gate Status</span></div><div><strong id="dailyGateClears">0</strong><span>Gates Cleared</span></div></div><p id="dailySystemHint" class="muted-copy">Daily quests and Gates are locked to your local calendar day.</p></section>
         <section class="panel"><h3>Daily Status Check</h3><div class="grid-2"><label>Fatigue<select id="fatigue"><option value="1">1 - Fresh</option><option value="2">2 - Good</option><option value="3" selected>3 - Normal</option><option value="4">4 - Drained</option><option value="5">5 - Cooked</option></select></label><label>Sleep Quality<select id="sleep"><option value="1">1 - Bad</option><option value="2">2 - Rough</option><option value="3" selected>3 - OK</option><option value="4">4 - Good</option><option value="5">5 - Great</option></select></label><label>Lower Back Pain<select id="backPain"><option value="0">0 - None</option><option value="1">1 - Mild</option><option value="2" selected>2 - Noticeable</option><option value="3">3 - Bad</option><option value="4">4 - Severe</option></select></label><label>Neck Pain<select id="neckPain"><option value="0">0 - None</option><option value="1">1 - Mild</option><option value="2" selected>2 - Noticeable</option><option value="3">3 - Bad</option><option value="4">4 - Severe</option></select></label></div><button id="generateQuest">Generate Today’s Quest</button></section>
         <section class="panel"><div class="section-head"><h3>Daily Quest</h3><span id="dayType" class="badge">Awaiting Input</span></div><div class="quest-progress"><span id="questProgressText">0/0 objectives complete</span><div class="mini-bar"><div id="questProgressFill"></div></div></div><div id="questList" class="quest-list"></div><button id="completeDay" class="primary">Complete Daily Quest</button><button id="missDay" class="danger">Mark Missed / Activate Penalty</button></section>
         <section class="panel"><h3>Penalty Zone</h3><p id="penaltyText">No penalty active. Maintain your streak, Hunter.</p></section>
       </section>
 
-      <section class="view" data-view="archive"><section class="panel"><div class="section-head"><h3>Hunter Archive</h3><span class="badge">How-To</span></div><p class="muted-copy">Open exercise instructions, movement cues, warnings, and references.</p><div id="codexList" class="codex-list"></div></section><section class="panel"><h3>Unlocked Titles</h3><div id="achievementList" class="achievement-list"></div></section></section>
+      <section class="view" data-view="archive">
+        <section class="panel"><div class="section-head"><h3>Hunter Archive</h3><span class="badge">How-To</span></div><p class="muted-copy">Open exercise instructions, movement cues, warnings, and references.</p><div id="codexList" class="codex-list"></div></section>
+        <section class="panel"><h3>Unlocked Titles</h3><div id="achievementList" class="achievement-list"></div></section>
+        <section class="panel"><div class="section-head"><h3>History Log</h3><span id="historyCount" class="badge">0 Entries</span></div><p class="muted-copy">Recent completed Daily Quests and Gates. This will become the weekly recap system later.</p><div id="historyList" class="history-list"></div></section>
+      </section>
+
       <section class="view" data-view="data"><section class="panel"><div class="section-head"><h3>Player Data</h3><span class="badge">Backup</span></div><p class="muted-copy">Your save now uses a permanent player profile key. Use export/import as a manual backup, or wipe when you want a clean finished-app start.</p><button id="exportSave" class="primary">Export Player Save</button><label class="file-import">Import Player Save<input id="importSave" type="file" accept="application/json,.json"></label><button id="wipeSave" class="danger">Wipe Player Data</button></section></section>
     </main>
 
     <nav class="bottom-nav"><button class="active" data-tab="status">Status</button><button data-tab="quest">Quest</button><button data-tab="archive">Archive</button><button data-tab="data">Data</button></nav>
   </div>
 
-  <script src="save.js"></script><script src="gates.js"></script><script src="daily.js"></script><script src="app.js"></script><script src="stats.js"></script><script src="tabs.js"></script>
+  <script src="save.js"></script><script src="gates.js"></script><script src="daily.js"></script><script src="app.js"></script><script src="stats.js"></script><script src="history.js"></script><script src="tabs.js"></script>
 </body>
 </html>
