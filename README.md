@@ -9,25 +9,41 @@ A Solo-Leveling-inspired offline Progressive Web App workout tracker.
 - Penalty quest system
 - Offline PWA support
 - iPhone home screen ready
+- Interactive Exercise Codex
+- Partial objective completion system
 
-## Awakening Roadmap
-### v1.1 — System Awakening Update
-- Quest completion tracking
-- Animated SYSTEM ALERT overlays
-- Improved iPhone safe-area handling
-- Achievement unlock framework
-- Better XP/rank-up feedback
-- Improved navigation states
+## Current Live Build
+### SYSTEM v1.5 — Codex Awakening
+- Interactive quest completion
+- Exercise how-to guides
+- Hunter Archive modal
+- Curated movement references
+- Partial XP progression
+- Level-up overlays
+- Dynamic quest progress tracking
 
-### Planned Features
+## Achievement Engine (In Development)
+Planned achievements:
+- First Hunt
+- Persistence I / II
+- Iron Spine
+- Conditioning Candidate
+- Recovery Specialist
+- No Excuses
+- Hidden System achievements
+
+Planned systems:
+- Achievement overlays
+- Unlockable titles
+- Progress tracking
+- Status / Player Card screen
+- Gate Events
+- Daily reset engine
+- Workout history tracking
 - Push notifications
-- Gate events
-- Hunter titles and specialization trees
-- Running progression system
-- Pull-up progression tree
+- Hunter specialization trees
 - Adaptive recovery analytics
 - Audio/UI effects
-- Expanded achievement system
 
 ## How to run locally
 Open `index.html` in a browser.
