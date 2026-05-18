@@ -42,6 +42,7 @@ function ensureDailyState(save){
       resetAt: null,
       activeGate: null,
       gateCompletedDate: null,
+      gateRollDate: null,
       totalGatesCleared: 0
     };
   }
@@ -54,10 +55,7 @@ function showDailyNotice(title, body, eyebrow = 'DAILY SYSTEM'){
   const titleEl = document.getElementById('overlayTitle');
   const bodyEl = document.getElementById('overlayBody');
   const eyebrowEl = document.getElementById('overlayEyebrow');
-  if(!overlay || !titleEl || !bodyEl || !eyebrowEl){
-    alert(`${title}\n${body}`);
-    return;
-  }
+  if(!overlay || !titleEl || !bodyEl || !eyebrowEl){ alert(`${title}\n${body}`); return; }
   eyebrowEl.textContent = eyebrow;
   titleEl.textContent = title;
   bodyEl.textContent = body;
@@ -75,9 +73,22 @@ function markDailyGenerated(save){
   const today = getLocalDateKey();
   const daily = ensureDailyState(save);
   daily.activeDate = today;
-  daily.generatedAt = new Date().toISOString();
+  daily.generatedAt = daily.generatedAt || new Date().toISOString();
   daily.resetAt = new Date(new Date().setHours(24, 0, 0, 0)).toISOString();
   return save;
+}
+
+function reconcileExistingQuest(){
+  const save = readDailySave();
+  if(!save || !Array.isArray(save.quests) || save.quests.length === 0) return;
+  const daily = ensureDailyState(save);
+  const today = getLocalDateKey();
+  if(daily.activeDate !== today){
+    markDailyGenerated(save);
+    save.log = save.log || [];
+    save.log.unshift(`${new Date().toLocaleString()}: Daily Quest locked to ${today}.`);
+    writeDailySave(save);
+  }
 }
 
 function applyGateIfRolled(save){
@@ -88,21 +99,11 @@ function applyGateIfRolled(save){
 
   daily.gateRollDate = today;
   const gate = window.SYSTEM_GATES.rollForGate();
-  if(!gate) {
-    daily.activeGate = null;
-    return save;
-  }
+  if(!gate){ daily.activeGate = null; return save; }
 
   save.quests = gate.modifier(save.quests || []);
   save.dayType = gate.name;
-  daily.activeGate = {
-    id: gate.id,
-    name: gate.name,
-    type: gate.type,
-    bonusXp: gate.bonusXp,
-    generatedAt: new Date().toISOString(),
-    cleared: false
-  };
+  daily.activeGate = { id: gate.id, name: gate.name, type: gate.type, bonusXp: gate.bonusXp, generatedAt: new Date().toISOString(), cleared: false };
   save.log = save.log || [];
   save.log.unshift(`${new Date().toLocaleString()}: ${gate.name} detected. Bonus XP available: +${gate.bonusXp}.`);
   showDailyNotice(gate.overlay, gate.description, 'GATE EVENT');
@@ -111,7 +112,7 @@ function applyGateIfRolled(save){
 
 function processDailyGeneration(){
   const save = readDailySave();
-  if(!save) return;
+  if(!save || !Array.isArray(save.quests) || save.quests.length === 0) return;
   markDailyGenerated(save);
   applyGateIfRolled(save);
   writeDailySave(save);
@@ -147,19 +148,14 @@ function updateDailyUi(){
   const save = readDailySave();
   const button = document.getElementById('generateQuest');
   if(!button) return;
-
   const daily = save ? ensureDailyState(save) : null;
   const today = getLocalDateKey();
   const locked = save && daily.activeDate === today && Array.isArray(save.quests) && save.quests.length > 0;
-
-  if(locked){
-    button.textContent = `Daily Quest Locked // Reset in ${getNextResetText()}`;
-  }else{
-    button.textContent = 'Generate Today’s Quest';
-  }
+  button.textContent = locked ? `Daily Quest Locked // Reset in ${getNextResetText()}` : 'Generate Today’s Quest';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  reconcileExistingQuest();
   updateDailyUi();
   setInterval(updateDailyUi, 60000);
 
@@ -173,20 +169,12 @@ document.addEventListener('DOMContentLoaded', () => {
         showDailyNotice('DAILY QUEST ALREADY GENERATED', `Next reset in ${getNextResetText()}.`, 'SYSTEM LOCK');
       }
     }, true);
-
-    generateButton.addEventListener('click', () => {
-      setTimeout(processDailyGeneration, 120);
-    });
+    generateButton.addEventListener('click', () => setTimeout(processDailyGeneration, 140));
   }
 
   const completeButton = document.getElementById('completeDay');
   if(completeButton){
-    completeButton.addEventListener('click', () => {
-      preCompleteDailySnapshot = readDailySave();
-    }, true);
-
-    completeButton.addEventListener('click', () => {
-      setTimeout(() => processGateCompletion(preCompleteDailySnapshot, readDailySave()), 140);
-    });
+    completeButton.addEventListener('click', () => { preCompleteDailySnapshot = readDailySave(); }, true);
+    completeButton.addEventListener('click', () => setTimeout(() => processGateCompletion(preCompleteDailySnapshot, readDailySave()), 160));
   }
 });
