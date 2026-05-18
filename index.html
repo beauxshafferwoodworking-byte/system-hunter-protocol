@@ -31,7 +31,7 @@
           <div class="level-row"><h2>LV. <span id="level">1</span></h2><p><span id="xp">0</span>/<span id="nextXp">250</span> XP</p></div>
           <div class="xp-bar"><div id="xpFill"></div></div>
           <div class="quick-stats"><div><strong id="streak">0</strong><span>Streak</span></div><div><strong id="fatigueStatus">Stable</strong><span>Fatigue</span></div><div><strong id="painStatus">Check</strong><span>Pain</span></div></div>
-          <p class="version">SYSTEM v2.5 // Daily Reset Protocol</p>
+          <p class="version">SYSTEM v2.6 // Daily Visibility</p>
         </section>
 
         <section class="panel status-card" id="playerCard">
@@ -52,6 +52,15 @@
       </section>
 
       <section class="view" data-view="quest">
+        <section class="panel daily-system-card">
+          <div class="section-head"><h3>Daily System</h3><span id="dailyLockBadge" class="badge">Checking</span></div>
+          <div class="daily-system-grid">
+            <div><strong id="dailyResetTimer">--</strong><span>Next Reset</span></div>
+            <div><strong id="dailyGateStatus">No Gate</strong><span>Gate Status</span></div>
+            <div><strong id="dailyGateClears">0</strong><span>Gates Cleared</span></div>
+          </div>
+          <p id="dailySystemHint" class="muted-copy">Daily quests and Gates are locked to your local calendar day.</p>
+        </section>
         <section class="panel"><h3>Daily Status Check</h3><div class="grid-2"><label>Fatigue<select id="fatigue"><option value="1">1 - Fresh</option><option value="2">2 - Good</option><option value="3" selected>3 - Normal</option><option value="4">4 - Drained</option><option value="5">5 - Cooked</option></select></label><label>Sleep Quality<select id="sleep"><option value="1">1 - Bad</option><option value="2">2 - Rough</option><option value="3" selected>3 - OK</option><option value="4">4 - Good</option><option value="5">5 - Great</option></select></label><label>Lower Back Pain<select id="backPain"><option value="0">0 - None</option><option value="1">1 - Mild</option><option value="2" selected>2 - Noticeable</option><option value="3">3 - Bad</option><option value="4">4 - Severe</option></select></label><label>Neck Pain<select id="neckPain"><option value="0">0 - None</option><option value="1">1 - Mild</option><option value="2" selected>2 - Noticeable</option><option value="3">3 - Bad</option><option value="4">4 - Severe</option></select></label></div><button id="generateQuest">Generate Today’s Quest</button></section>
         <section class="panel"><div class="section-head"><h3>Daily Quest</h3><span id="dayType" class="badge">Awaiting Input</span></div><div class="quest-progress"><span id="questProgressText">0/0 objectives complete</span><div class="mini-bar"><div id="questProgressFill"></div></div></div><div id="questList" class="quest-list"></div><button id="completeDay" class="primary">Complete Daily Quest</button><button id="missDay" class="danger">Mark Missed / Activate Penalty</button></section>
         <section class="panel"><h3>Penalty Zone</h3><p id="penaltyText">No penalty active. Maintain your streak, Hunter.</p></section>
