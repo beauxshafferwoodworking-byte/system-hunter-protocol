@@ -6,12 +6,21 @@
   <title>SYSTEM // Hunter Protocol</title>
   <meta name="theme-color" content="#020817" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="SYSTEM" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div id="systemOverlay" class="system-overlay hidden">
+    <div class="system-modal">
+      <p id="overlayEyebrow" class="eyebrow">SYSTEM ALERT</p>
+      <h2 id="overlayTitle">Quest Updated</h2>
+      <p id="overlayBody">New orders have been generated.</p>
+    </div>
+  </div>
+
   <div class="app-shell">
     <header class="system-header">
       <div>
@@ -22,7 +31,7 @@
     </header>
 
     <main>
-      <section class="panel hero-panel">
+      <section class="panel hero-panel" data-section="status">
         <div class="scanline"></div>
         <div class="rank-block">
           <span id="rank">E-RANK</span>
@@ -40,7 +49,7 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel" data-section="check">
         <h3>Daily Status Check</h3>
         <div class="grid-2">
           <label>Fatigue
@@ -83,17 +92,21 @@
         <button id="generateQuest">Generate Today’s Quest</button>
       </section>
 
-      <section class="panel">
+      <section class="panel" data-section="quest">
         <div class="section-head">
           <h3>Daily Quest</h3>
           <span id="dayType" class="badge">Awaiting Input</span>
+        </div>
+        <div class="quest-progress">
+          <span id="questProgressText">0/0 objectives complete</span>
+          <div class="mini-bar"><div id="questProgressFill"></div></div>
         </div>
         <div id="questList" class="quest-list"></div>
         <button id="completeDay" class="primary">Complete Daily Quest</button>
         <button id="missDay" class="danger">Mark Missed / Activate Penalty</button>
       </section>
 
-      <section class="panel">
+      <section class="panel" data-section="stats">
         <h3>Hunter Stats</h3>
         <div class="stats">
           <div><span>Strength</span><b id="str">1</b></div>
@@ -102,6 +115,11 @@
           <div><span>Vitality</span><b id="vit">1</b></div>
           <div><span>Recovery</span><b id="rec">1</b></div>
         </div>
+      </section>
+
+      <section class="panel" data-section="achievements">
+        <h3>Unlocked Titles</h3>
+        <div id="achievementList" class="achievement-list"></div>
       </section>
 
       <section class="panel">
@@ -116,10 +134,10 @@
     </main>
 
     <nav class="bottom-nav">
-      <button data-scroll="0">Status</button>
-      <button data-scroll="1">Check</button>
-      <button data-scroll="2">Quest</button>
-      <button data-scroll="3">Stats</button>
+      <button class="active" data-scroll="status">Status</button>
+      <button data-scroll="check">Check</button>
+      <button data-scroll="quest">Quest</button>
+      <button data-scroll="stats">Stats</button>
     </nav>
   </div>
 
