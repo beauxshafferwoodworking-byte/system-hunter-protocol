@@ -31,7 +31,7 @@
           <div class="level-row"><h2>LV. <span id="level">1</span></h2><p><span id="xp">0</span>/<span id="nextXp">250</span> XP</p></div>
           <div class="xp-bar"><div id="xpFill"></div></div>
           <div class="quick-stats"><div><strong id="streak">0</strong><span>Streak</span></div><div><strong id="fatigueStatus">Stable</strong><span>Fatigue</span></div><div><strong id="painStatus">Check</strong><span>Pain</span></div></div>
-          <p class="version">SYSTEM v2.2 // Status Expansion</p>
+          <p class="version">SYSTEM v2.4 // Gate Events</p>
         </section>
 
         <section class="panel status-card" id="playerCard">
@@ -45,15 +45,7 @@
           </div>
           <div class="status-divider"></div>
           <div class="lifetime-grid">
-            <div><span>Pushups</span><strong id="totalPushups">0</strong></div>
-            <div><span>Squats</span><strong id="totalSquats">0</strong></div>
-            <div><span>Lunges</span><strong id="totalLunges">0</strong></div>
-            <div><span>Pullups</span><strong id="totalPullups">0</strong></div>
-            <div><span>Core Sets</span><strong id="totalCore">0</strong></div>
-            <div><span>Mobility</span><strong id="totalMobility">0</strong></div>
-            <div><span>Recovery</span><strong id="totalRecovery">0</strong></div>
-            <div><span>Walk/Run Min</span><strong id="totalCardioMinutes">0</strong></div>
-            <div><span>Est. Miles</span><strong id="totalMiles">0.0</strong></div>
+            <div><span>Pushups</span><strong id="totalPushups">0</strong></div><div><span>Squats</span><strong id="totalSquats">0</strong></div><div><span>Lunges</span><strong id="totalLunges">0</strong></div><div><span>Pullups</span><strong id="totalPullups">0</strong></div><div><span>Core Sets</span><strong id="totalCore">0</strong></div><div><span>Mobility</span><strong id="totalMobility">0</strong></div><div><span>Recovery</span><strong id="totalRecovery">0</strong></div><div><span>Walk/Run Min</span><strong id="totalCardioMinutes">0</strong></div><div><span>Est. Miles</span><strong id="totalMiles">0.0</strong></div>
           </div>
           <p class="muted-copy">Screenshot this card as your current Hunter status. Share/export options will come later.</p>
         </section>
@@ -69,13 +61,12 @@
       </section>
 
       <section class="view" data-view="archive"><section class="panel"><div class="section-head"><h3>Hunter Archive</h3><span class="badge">How-To</span></div><p class="muted-copy">Open exercise instructions, movement cues, warnings, and references.</p><div id="codexList" class="codex-list"></div></section><section class="panel"><h3>Unlocked Titles</h3><div id="achievementList" class="achievement-list"></div></section></section>
-
       <section class="view" data-view="data"><section class="panel"><div class="section-head"><h3>Player Data</h3><span class="badge">Backup</span></div><p class="muted-copy">Your save now uses a permanent player profile key. Use export/import as a manual backup, or wipe when you want a clean finished-app start.</p><button id="exportSave" class="primary">Export Player Save</button><label class="file-import">Import Player Save<input id="importSave" type="file" accept="application/json,.json"></label><button id="wipeSave" class="danger">Wipe Player Data</button></section></section>
     </main>
 
     <nav class="bottom-nav"><button class="active" data-tab="status">Status</button><button data-tab="quest">Quest</button><button data-tab="archive">Archive</button><button data-tab="data">Data</button></nav>
   </div>
 
-  <script src="save.js"></script><script src="app.js"></script><script src="stats.js"></script><script src="tabs.js"></script>
+  <script src="save.js"></script><script src="gates.js"></script><script src="app.js"></script><script src="stats.js"></script><script src="tabs.js"></script>
 </body>
 </html>
