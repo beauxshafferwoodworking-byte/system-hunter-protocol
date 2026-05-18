@@ -1,0 +1,117 @@
+const STATS_ACTIVE_SAVE_KEY = 'system_hunter_protocol_v16';
+const STATS_PLAYER_SAVE_KEY = 'system_hunter_player_save';
+let preCompletionSnapshot = null;
+
+function readStatsSave(){
+  try{
+    return JSON.parse(localStorage.getItem(STATS_ACTIVE_SAVE_KEY) || localStorage.getItem(STATS_PLAYER_SAVE_KEY) || 'null');
+  }catch(error){
+    console.warn('Unable to read status save.', error);
+    return null;
+  }
+}
+
+function writeStatsSave(save){
+  localStorage.setItem(STATS_ACTIVE_SAVE_KEY, JSON.stringify(save));
+  localStorage.setItem(STATS_PLAYER_SAVE_KEY, JSON.stringify(save));
+}
+
+function ensureLifetimeStats(save){
+  if(!save.lifetimeStats){
+    save.lifetimeStats = {
+      pushups: 0,
+      squats: 0,
+      lunges: 0,
+      coreSets: 0,
+      mobilitySessions: 0,
+      cardioMinutes: 0,
+      recoverySessions: 0,
+      pullups: 0,
+      longestStreak: save.streak || 0,
+      lastUpdated: null
+    };
+  }
+  if(typeof save.lifetimeStats.longestStreak === 'undefined') save.lifetimeStats.longestStreak = save.streak || 0;
+  return save.lifetimeStats;
+}
+
+function estimateQuestVolume(quest){
+  const name = quest.name || '';
+  const detail = quest.detail || '';
+  const text = `${name} ${detail}`.toLowerCase();
+  const volume = { pushups:0, squats:0, lunges:0, coreSets:0, mobilitySessions:0, cardioMinutes:0, recoverySessions:0, pullups:0 };
+
+  if(text.includes('mobility') || text.includes('stretch') || text.includes('decompression') || text.includes('posture')) volume.mobilitySessions += 1;
+  if(text.includes('recovery') || text.includes('breathing') || text.includes('neck')) volume.recoverySessions += 1;
+  if(text.includes('walk') || text.includes('jog') || text.includes('run')) volume.cardioMinutes += text.includes('8 rounds') ? 25 : 20;
+  if(text.includes('pushup') || text.includes('pushups')) volume.pushups += text.includes('4 rounds') ? 40 : text.includes('3 rounds') ? 24 : 60;
+  if(text.includes('squat') || text.includes('squats')) volume.squats += text.includes('4 rounds') ? 60 : text.includes('3 rounds') ? 36 : 60;
+  if(text.includes('lunge') || text.includes('lunges')) volume.lunges += text.includes('4 rounds') ? 64 : 48;
+  if(text.includes('plank') || text.includes('dead bug') || text.includes('bird dog') || text.includes('hollow') || text.includes('core')) volume.coreSets += 3;
+  if(text.includes('pull-up') || text.includes('pullup') || text.includes('pullups')) volume.pullups += 25;
+
+  return volume;
+}
+
+function addVolume(target, volume){
+  Object.keys(volume).forEach(key => {
+    target[key] = (target[key] || 0) + volume[key];
+  });
+}
+
+function processCompletedQuestStats(before, after){
+  if(!before || !after) return;
+  const beforeFull = before.fullCompletions || 0;
+  const beforePartial = before.partialCompletions || 0;
+  const afterFull = after.fullCompletions || 0;
+  const afterPartial = after.partialCompletions || 0;
+  const changed = afterFull > beforeFull || afterPartial > beforePartial;
+  if(!changed) return;
+
+  const stats = ensureLifetimeStats(after);
+  const completedQuests = (before.quests || []).filter(q => q.done);
+  completedQuests.forEach(quest => addVolume(stats, estimateQuestVolume(quest)));
+  stats.longestStreak = Math.max(stats.longestStreak || 0, after.streak || 0);
+  stats.lastUpdated = new Date().toISOString();
+  writeStatsSave(after);
+  renderStatusCard(after);
+}
+
+function renderStatusCard(save = readStatsSave()){
+  if(!save) return;
+  const stats = ensureLifetimeStats(save);
+  const setText = (id, value) => { const el = document.getElementById(id); if(el) el.textContent = value; };
+
+  const rank = save.level >= 14 ? 'C-RANK' : save.level >= 7 ? 'D-RANK' : 'E-RANK';
+  setText('statusTitle', `${rank} // ${save.title || 'Exhausted Survivor'}`);
+  setText('statusLevel', save.level || 1);
+  setText('statusFullQuests', save.fullCompletions || 0);
+  setText('statusPartialQuests', save.partialCompletions || 0);
+  setText('statusLongestStreak', stats.longestStreak || save.streak || 0);
+  setText('statusAchievements', (save.unlockedAchievements || []).length);
+  setText('totalPushups', stats.pushups || 0);
+  setText('totalSquats', stats.squats || 0);
+  setText('totalLunges', stats.lunges || 0);
+  setText('totalCore', stats.coreSets || 0);
+  setText('totalMobility', stats.mobilitySessions || 0);
+  setText('totalCardioMinutes', stats.cardioMinutes || 0);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderStatusCard();
+
+  const completeButton = document.getElementById('completeDay');
+  if(completeButton){
+    completeButton.addEventListener('click', () => {
+      preCompletionSnapshot = readStatsSave();
+    }, true);
+
+    completeButton.addEventListener('click', () => {
+      setTimeout(() => processCompletedQuestStats(preCompletionSnapshot, readStatsSave()), 80);
+    });
+  }
+
+  document.querySelectorAll('.bottom-nav button[data-tab]').forEach(button => {
+    button.addEventListener('click', () => setTimeout(() => renderStatusCard(), 60));
+  });
+});
